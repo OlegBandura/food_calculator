@@ -1,29 +1,46 @@
+require 'ingredient'
 require 'ingredient_quantity'
+
 describe IngredientQuantity do
-  context '#total_cost' do
-    ingredient = Ingredient.new(name: 'carrot', price: 2)
-    ingredient = Ingredient.new(name: 'potato', price: 5)
-    ingredient = Ingredient.new(name: 'carrot', price: 2)
+  let(:first_ingredient) { Ingredient.new(name: 'Potato', price: 10) }
+  describe '#total_cost' do
+    context 'get total price' do
+      it { expect(described_class.new.total_price).to eq(nil) }
 
-    quantity = 0.3
-    price = ingredient[:price] * quantity
-    cost = 0.6
-    it 'total cost' do
-      expect(price).to eq(cost)
+      let(:count_first_ingredient) { described_class.new(ingredient: first_ingredient, quantity: 200) }
+      it 'create first ingredient' do
+        expect(count_first_ingredient.total_price).to eq(2)
+      end
+    end
+  end
+
+  describe '#+' do
+    let(:ingredient_1) { described_class.new(ingredient: first_ingredient, quantity: 500) }
+    let(:ingredient_2) { described_class.new(ingredient: first_ingredient, quantity: 400) }
+    let(:ingredient_quantity) { ingredient_1 + ingredient_2 }
+      it 'ingredient != nil' do
+        expect(ingredient_quantity.total_price).to eq(ingredient_1.total_price + ingredient_2.total_price)
+      end
     end
 
-    ingredient_quantity = IngredientQuantity.new(price: price)
-
-    # before do
-    #   i
-    # end
-
-    it '#+' do
-      expect(ingredient_quantity).to eq
+  describe '#*' do
+    before do
+      @ingredient_1 = described_class.new(ingredient: first_ingredient, quantity: 100)
     end
 
-    it '#*' do
+    context "помножемо на обєкт" do
+      ingredient_quantity = described_class.new
 
+      it "Не пустий обєкт * 2" do
+        @ingredient_1 *= 2
+        expect(@ingredient_1.total_price).to eq(2)
+        expect(@ingredient_1.quantity).to eq(200)
+      end
+      it "Не пустий обєкт * 10" do
+        @ingredient_1 *= 10
+        expect(@ingredient_1.total_price).to eq(10)
+        expect(@ingredient_1.quantity).to eq(1000)
+      end
     end
   end
 end
